@@ -11,9 +11,8 @@ import my_config
 
 def convert_data(d):
     """Convert date/time strings into datetime objects, digit strings into integers, EDGE_* values into seconds"""
+    d['t'] = datetime.datetime.strptime(d['t'], '%Y-%m-%d %H:%M:%S')
     for k in d.keys():
-        if k == 't':
-            d[k] = datetime.datetime.strptime(d[k], '%Y-%m-%d %H:%M:%S')
         if isinstance(d[k], str) and d[k].isdigit():
             d[k] = int(d[k])
         if k.startswith('EDGE_'):
@@ -51,6 +50,7 @@ def main():
                 collection.insert(log_line)
                 entries_added += 1
         f.close()
+    
     print 'added %s entries to the database'%entries_added
 
 
