@@ -23,5 +23,5 @@ query_string: str - dm: query string
 todo:
 
 - figure out the easiest way to format data in the view before sending it to the template
-- display missing stats (requests percentage by asset_name/country)
+
 
