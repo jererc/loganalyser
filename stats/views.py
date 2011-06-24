@@ -11,6 +11,11 @@ def home(request):
     collection = pymongo.collection.Collection(db, my_config.MONGODB_COLLECTION)
     
     #format data before sending it to the template
+    data = {
+        'users': {},
+        'countries': {},
+        'asset_names': {},
+        }
     users = {}
     countries = {}
     asset_names = {}
@@ -19,16 +24,16 @@ def home(request):
     for d in db_query:
         if d['user_id'] not in users:
             users[d['user_id']] = [0, 0]
-        if d['XGEOIP_COUNTRY_CODE2'] not in countries:
-            countries[d['XGEOIP_COUNTRY_CODE2']] = 0
+        if d['country_code'] not in countries:
+            countries[d['country_code']] = 0
         if d['asset_name'] not in asset_names:
             asset_names[d['asset_name']] = 0
     for user in users:
         for d in collection.find({'user_id': user}):
-            users[user][0] += d['EDGE_SENT']
-            users[user][1] += d['O']
+            users[user][0] += d['edge_sent']
+            users[user][1] += d['bytes_sent']
     for country in countries:
-        for d in collection.find({'XGEOIP_COUNTRY_CODE2': country}):
+        for d in collection.find({'country_code': country}):
             countries[country] += 1
         countries[country] = float(countries[country]) * 100 / total_entries
     for asset_name in asset_names:

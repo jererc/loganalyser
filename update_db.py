@@ -10,15 +10,15 @@ import my_config
 
 
 def convert_data(d):
-    """Convert date/time strings into datetime objects, digit strings into integers, EDGE_* values into seconds"""
-    d['t'] = datetime.datetime.strptime(d['t'], '%Y-%m-%d %H:%M:%S')
+    """Convert date_time string into datetime object, digit strings into integers, edge_* values into seconds"""
+    d['date_time'] = datetime.datetime.strptime(d['date_time'], '%Y-%m-%d %H:%M:%S')
     for k in d.keys():
-        if k in ['O', 'D', 'timestamp'] or k.startswith('EDGE_'):
+        if k in ['bytes_sent', 'edge_duration', 'edge_start', 'edge_sent']:
             try:
                 d[k] = int(d[k])
             except:
                 d[k] = 0
-        if k.startswith('EDGE_'):
+        if k in ['edge_duration', 'edge_start', 'edge_sent']:
             d[k] /= 1000
     return d
 
@@ -27,7 +27,6 @@ def main():
     #connect to the database and prepare the collection
     connection = pymongo.Connection(my_config.MONGODB_SERVER)
     db = connection.test
-    db.drop_collection(my_config.MONGODB_COLLECTION)
     collection = pymongo.collection.Collection(db, my_config.MONGODB_COLLECTION)
     
     #browse the logs path, and read each file
@@ -37,20 +36,27 @@ def main():
         f = gzip.open(filename)
         print 'reading %s...'%filename
         for line in f:
+            #grab the values from the log line, and convert them into a dict
             log_line = my_config.RE_LOG_LINE.match(line).groupdict()
-            if log_line['User_agent'] not in my_config.EXCLUSIONS_USER_AGENT:
+            if log_line['user_agent'] not in my_config.EXCLUSIONS_USER_AGENT:
+                #grab the url path values and add them to the log dict
                 try:
-                    request_path = my_config.RE_REQUEST_PATH.match(log_line['Uq']).groupdict()
+                    request_path = my_config.RE_REQUEST_PATH.match(log_line['url']).groupdict()
                 except AttributeError:
                     continue
                 log_line.update(request_path)
+                #add the raw log line to the dict for reference
+                log_line['raw'] = line
                 log_line = convert_data(log_line)
                 
-                #update the database
-                collection.insert(log_line)
-                entries_added += 1
+                #update the database, check if the log line already exists in the db
+                if not collection.find({'raw': log_line['raw']}).count():
+                    collection.insert(log_line)
+                    entries_added += 1
         f.close()
-    
+
+        if entries_added >= 1000: break
+        
     print 'added %s entries to the database'%entries_added
 
 

@@ -1,24 +1,17 @@
 mongodb data format:
 
 KEY: FORMAT - DESCRIPTION
-t: datetime object - apache2 %t: Time the request was received (standard english format)
-h: str - apache2 %h: Remote host
-Uq: str - apache2 %U + %q: The URL path requested, including query strings
-s: str - apache2 %>s: Status. For requests that got internally redirected, this is the status of the *original* request --- %...>s for the last.
-O: int - apache2 %O: Bytes sent, including headers.
-D: int - apache2 %D: The time taken to serve the request, in microseconds.
-EDGE_DURATION: int - apache2 %{...}e: durée totale en ms du contenu video servi, en secondes (environ variable).
-EDGE_START: int - apache2 %{...}e: position de démarrage dans le contenu video servi, en secondes (environ variable).
-EDGE_SENT: int - apache2 %{...}e: durée réellement servie au client, en secondes (environ variable).
-XGEOIP_COUNTRY_CODE2: str - apache2 %{...}e: pays d'origine de la requète (environ variable).
-Referer: str - apache2 %{Referer}i: The contents of Referer: header line(s) in the request sent to the server.
-User_agent: str - apache2 %{User-agent}i: The contents of User-agent: header line(s) in the request sent to the server.
+date_time: datetime object - apache2 %t: Time the request was received (standard english format)
+url: str - apache2 %U + %q: The URL path requested, including query strings
+bytes_sent: int - apache2 %O: Bytes sent, including headers.
+edge_duration: int - apache2 %{...}e: durée totale en ms du contenu video servi, en secondes (environ variable).
+edge_start: int - apache2 %{...}e: position de démarrage dans le contenu video servi, en secondes (environ variable).
+edge_sent: int - apache2 %{...}e: durée réellement servie au client, en secondes (environ variable).
+country_code: str - apache2 %{...}e: pays d'origine de la requète (environ variable).
+user_agent: str - apache2 %{User-agent}i: The contents of User-agent: header line(s) in the request sent to the server.
 user_id: str - dm: id of the user
 media_id: str - dm: id of the served media
 asset_name: str - dm: asset name
-timestamp: int - dm: timestamp
-extension: str - dm: media file extension
-query_string: str - dm: query string
 
 
 todo:
