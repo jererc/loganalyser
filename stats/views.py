@@ -11,11 +11,6 @@ def home(request):
     collection = pymongo.collection.Collection(db, my_config.MONGODB_COLLECTION)
     
     #format data before sending it to the template
-    data = {
-        'users': {},
-        'countries': {},
-        'asset_names': {},
-        }
     users = {}
     countries = {}
     asset_names = {}
