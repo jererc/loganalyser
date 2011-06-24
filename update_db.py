@@ -14,7 +14,7 @@ def convert_data(d):
     for v in d.keys():
         if v == 't':
             d[v] = datetime.datetime.strptime(d[v], '%Y-%m-%d %H:%M:%S')
-        elif d[v] != None and d[v].isdigit():
+        if isinstance(d[v], str) and d[v].isdigit():
             d[v]=int(d[v])
         if v.startswith('EDGE_'):
             try:
@@ -45,19 +45,12 @@ def main():
                     continue
                 log_line.update(request_path)
                 log_line=convert_data(log_line)
-
-                print log_line
                 
-
                 #update the database
                 db.logs.insert(log_line)
                 entries_added += 1
 
         f.close()
-
-        
-        break #TEMP
-
     
     print 'added %s entries to the database'%entries_added
 
