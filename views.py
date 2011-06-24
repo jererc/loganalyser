@@ -8,10 +8,10 @@ def home(request):
     #connect to the database
     connection = pymongo.Connection(my_config.MONGODB_SERVER)
     db = connection.test
-    
-    #format data before sending them to the template: {user: [EDGE_SENT, BYTES_SENT]; ...}
-    users = {}
     collection = pymongo.collection.Collection(db, my_config.MONGODB_COLLECTION)
+    
+    #format data before sending them to the template: {user_id: [EDGE_SENT, BYTES_SENT]; ...}
+    users = {}
     for d in collection.find():
         if d['user_id'] not in users:
             users[d['user_id']] = [0, 0]

@@ -45,7 +45,7 @@ def main():
                 except AttributeError:
                     continue
                 log_line.update(request_path)
-                log_line=convert_data(log_line)
+                log_line = convert_data(log_line)
                 
                 #update the database
                 collection.insert(log_line)
