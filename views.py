@@ -6,16 +6,17 @@ import my_config
 
 def home(request):
     #connect to the database
-    connection = pymongo.Connection(my_config.mongodb_server)
+    connection = pymongo.Connection(my_config.MONGODB_SERVER)
     db = connection.test
-
+    
     #format data before sending them to the template: {user: [EDGE_SENT, BYTES_SENT]; ...}
     users = {}
-    for d in db.logs.find():
+    collection = pymongo.collection.Collection(db, my_config.MONGODB_COLLECTION)
+    for d in collection.find():
         if d['user_id'] not in users:
             users[d['user_id']] = [0, 0]
     for user in users:
-        for d in db.logs.find({'user_id': user}):
+        for d in collection.find({'user_id': user}):
             users[user][0] += d['EDGE_SENT']
             users[user][1] += d['O']
     
