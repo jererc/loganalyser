@@ -15,7 +15,7 @@ def convert_data(d):
         if v == 't':
             d[v] = datetime.datetime.strptime(d[v], '%Y-%m-%d %H:%M:%S')
         if isinstance(d[v], str) and d[v].isdigit():
-            d[v]=int(d[v])
+            d[v] = int(d[v])
         if v.startswith('EDGE_'):
             try:
                 d[v] /= 1000
