@@ -1,5 +1,6 @@
-mongodb data format (key: format - description):
+mongodb data format:
 
+KEY: FORMAT - DESCRIPTION
 t: datetime object - apache2 %t: Time the request was received (standard english format)
 h: str - apache2 %h: Remote host
 Uq: str - apache2 %U + %q: The URL path requested, including query strings
