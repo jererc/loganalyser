@@ -5,13 +5,16 @@ import os.path
 import re
 import gzip
 import pymongo
+import datetime
 import my_config
 
 
-def clean_data(d):
-    """Convert digit strings to integers, convert EDGE_* values to seconds"""
+def convert_data(d):
+    """Convert date/time into datetime objects, digit strings into integers, EDGE_* values into seconds"""
     for v in d.keys():
-        if d[v] != None and d[v].isdigit():
+        if v == 't':
+            d[v] = datetime.datetime.strptime(d[v], '%Y-%m-%d %H:%M:%S')
+        elif d[v] != None and d[v].isdigit():
             d[v]=int(d[v])
         if v.startswith('EDGE_'):
             try:
@@ -41,13 +44,20 @@ def main():
                 except AttributeError:
                     continue
                 log_line.update(request_path)
-                log_line=clean_data(log_line)
+                log_line=convert_data(log_line)
+
+                print log_line
+                
 
                 #update the database
                 db.logs.insert(log_line)
                 entries_added += 1
 
         f.close()
+
+        
+        break #TEMP
+
     
     print 'added %s entries to the database'%entries_added
 
