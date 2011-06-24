@@ -1,39 +1,28 @@
-Le but de ce projet est d'analyser des fichier de log des serveur diffusant les videos et d en sortir des statistiques.
+mongodb data format (key: format - description):
 
-Le repertoire 'log' contient des fichier de log apache gzipper le nommage est YYYYMMDDHHMMSS Year Month Day Hour Minute Second.
+t: datetime object - apache2 %t: Time the request was received (standard english format)
+h: str - apache2 %h: Remote host
+Uq: str - apache2 %U + %q: The URL path requested, including query strings
+s: str - apache2 %>s: Status. For requests that got internally redirected, this is the status of the *original* request --- %...>s for the last.
+O: int - apache2 %O: Bytes sent, including headers.
+D: int - apache2 %D: The time taken to serve the request, in microseconds.
+EDGE_DURATION: int - apache2 %{...}e: durée totale en ms du contenu video servi, en secondes (environ variable).
+EDGE_START: int - apache2 %{...}e: position de démarrage dans le contenu video servi, en secondes (environ variable).
+EDGE_SENT: int - apache2 %{...}e: durée réellement servie au client, en secondes (environ variable).
+XGEOIP_COUNTRY_CODE2: str - apache2 %{...}e: pays d'origine de la requète (environ variable).
+Referer: str - apache2 %{Referer}i: The contents of Referer: header line(s) in the request sent to the server.
+User_agent: str - apache2 %{User-agent}i: The contents of User-agent: header line(s) in the request sent to the server.
+user_id: str - dm: id of the user
+media_id: str - dm: id of the served media
+asset_name: str - dm: asset name
+timestamp: int - dm: timestamp
+extension: str - dm: media file extension
+query_string: str - dm: query string
 
-La directive apache utilisee pour ce fichier est:
-LogFormat "%{%F %T}t|%h|%U%q|%>s|%O|%D|%{EDGE_DURATION}e|%{EDGE_START}e|%{EDGE_SENT}e|%{XGEOIP_COUNTRY_CODE2}e|%{Referer}i|%{User-agent}i" parsable
 
-* EDGE_DURATION: la duree total en millisecondes du contenu video servi.
-* EDGE_START: La position en millisecondes de demarrage dans le contenu video servi.
-* EDGE_SENT: La duree  en millisecondes reellement servie au client.
-* XGEOIP_COUNTRY_CODE2: pays d origine de la requete
+todo:
 
-Les autres parametres de la directive LogFormat se trouve dans la documentation d'apache 2.
+- hardcoded values (templates path, db name...)
+- figure out the easiest way to format data in the view before sending it to the template
+- display missing stats
 
-La premiere etapes consistes a faire un script d'importation de ses logs dans mongodb, en faisant en sorte de convertir chaque donnee dans son type: ex une date en date mongo, un entier en int, etc.
-Remarque:
-* les duree EDGE_* doivent etre en secondes dans la Db
-* ignorer les entrees dont le user agent est: check_http/v1.4.13 (nagios-plugins 1.4.13)
-
-Le format du PATH d une requete est le suivant (ignorer les autres):
-ex: /4bc466f8f325e13acf000000/4c4f04dff325e158e100000e/mp4_h264_aac_hq-1285617562.mp4?start=0&auth=1286302148_f3d3a17038eab8c382ae86679c692edd
- -> /user_id/media_id/asset_name-timestamp.extension?query_string
-
-Il faut parser ce path et stocker les champs suivant dans la db et non le path brut:
-- user_id
-- media_id
-- asset_name
-
-La deuxieme etape est de faire un petit site web permettant d afficher ses informations:
-- consommation par user_id en terme de volume (ko) servie et en terme de duree de video servie (seconds)
-- pourcentage des requetes par asset_name
-- pourcentage des requetes de video par pays
-- autre type de stats que tu trouverais pertinente
-
-Le design du site n est pas important.
-
-Le resultat doit etre mis a disposition sur github (juste le code, pas de donnee).
-
-Committer regulierement par etape de progression du projet.
