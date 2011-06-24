@@ -50,11 +50,7 @@ def main():
                 #update the database
                 collection.insert(log_line)
                 entries_added += 1
-
         f.close()
-
-        break
-    
     print 'added %s entries to the database'%entries_added
 
 
