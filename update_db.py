@@ -13,13 +13,13 @@ def convert_data(d):
     """Convert date/time strings into datetime objects, digit strings into integers, EDGE_* values into seconds"""
     d['t'] = datetime.datetime.strptime(d['t'], '%Y-%m-%d %H:%M:%S')
     for k in d.keys():
-        if isinstance(d[k], str) and d[k].isdigit():
-            d[k] = int(d[k])
-        if k.startswith('EDGE_'):
+        if k in ['O', 'D', 'timestamp'] or k.startswith('EDGE_'):
             try:
-                d[k] /= 1000
-            except TypeError:
+                d[k] = int(d[k])
+            except:
                 d[k] = 0
+        if k.startswith('EDGE_'):
+            d[k] /= 1000
     return d
 
 
