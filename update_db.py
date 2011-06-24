@@ -54,9 +54,7 @@ def main():
                     collection.insert(log_line)
                     entries_added += 1
         f.close()
-
-        if entries_added >= 1000: break
-        
+    
     print 'added %s entries to the database'%entries_added
 
 
