@@ -41,14 +41,13 @@ files description:
 *******************************************************************************
 - my_config.py: global config file
 - update_db.py: update the mongodb logs collection with the apache2 log data converted to the right format (see below)
-- update_stats.py: process stats using the logs collection and update the mongod stats collection
+- update_stats.py: process stats using the logs collection and update the mongodb stats collection
 - stats: django app allowing the user to view the stats by type and date
 
 
 *******************************************************************************
-mongodb data format:
+mongodb data format (KEY: FORMAT - DESCRIPTION):
 *******************************************************************************
-KEY: FORMAT - DESCRIPTION
 date_time: datetime object - apache2 %t: Time the request was received (standard english format)
 url: str - apache2 %U + %q: The URL path requested, including query strings
 bytes_sent: int - apache2 %O: Bytes sent, including headers.
@@ -65,7 +64,8 @@ asset_name: str - dm: asset name
 *******************************************************************************
 todo:
 *******************************************************************************
-- optimize the code
+- sort log files before parsing, and sort stats before display
+- code optimization
 - design for the django app
 
 

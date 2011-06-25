@@ -11,7 +11,9 @@ def check_time_delta(date_time, delta_max):
     if delta.seconds / 60 <= delta_max:
         return True
 
+
 def main():
+    """Read the mongodb log collection and process different stats based on types and dates, then store them in a dedicated mongodb collection."""
     #connect to the database and prepare the collections
     connection = pymongo.Connection(my_config.MONGODB_SERVER)
     db = connection.test
@@ -34,13 +36,13 @@ def main():
                 if d['asset_name'] not in asset_names:
                     asset_names[d['asset_name']] = 0
         
-        #update the stats values
+        #update the stats dicts
         print 'processing stats for a %s hours time delta'%time_delta
         total_entries = 0
         for d in collection_logs.find():
             if check_time_delta(d['date_time'], time_delta):
                 total_entries += 1
-                #update the stats dicts
+                #update the stats dicts values
                 users[d['user_id']][0] += d['edge_sent']
                 users[d['user_id']][1] += d['bytes_sent']
                 countries[d['country_code']] += 1
@@ -51,7 +53,7 @@ def main():
         for i in asset_names:
             asset_names[i] = float(asset_names[i]) * 100 / total_entries
         
-        #convert the stats dicts into lists for a lighter processing in the view
+        #convert the stats dicts into lists so that the view has the minimum to process
         stats = {
             'users': [['User ID', 'Total data sent (ko)', 'Total viewing time (seconds)']],
             'countries': [['Country', 'Request %']],
@@ -64,7 +66,7 @@ def main():
         for asset_name in asset_names:
             stats['asset_names'].append([asset_name, asset_names[asset_name]])
         
-        #update the stats database
+        #update the stats collection
         for t in ['users', 'countries', 'asset_names']:
             collection_stats.remove({'stats_type': t, 'stats_time': time_delta})
             collection_stats.insert({'stats_type': t, 'stats_time': time_delta, 'stats': stats[t]})
