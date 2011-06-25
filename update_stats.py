@@ -55,7 +55,7 @@ def main():
         
         #convert the stats dicts into lists so that the view has the minimum to process
         stats = {
-            'users': [['User ID', 'Total data sent (ko)', 'Total viewing time (seconds)']],
+            'users': [['User ID', 'Total data sent (kB)', 'Total viewing time (seconds)']],
             'countries': [['Country', 'Request %']],
             'asset_names': [['Asset name', 'Request %']],
             }
