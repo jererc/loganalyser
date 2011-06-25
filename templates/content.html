@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if stats %}
+<table border="1">
+{% for r in stats %}
+<tr>
+{% for c in r %}
+<td>{{ c }}</td>
+{% endfor %}
+</tr>
+{% endfor %}
+</table>
+{% endif %}
+{% endblock %}
+

@@ -1,5 +1,53 @@
-mongodb data format:
+*******************************************************************************
+purpose:
+*******************************************************************************
+Le but de ce projet est d'analyser des fichier de log des serveur diffusant les videos et d en sortir des statistiques.
 
+Le repertoire 'log' contient des fichier de log apache gzipper le nommage est YYYYMMDDHHMMSS Year Month Day Hour Minute Second.
+
+La directive apache utilisee pour ce fichier est:
+LogFormat "%{%F %T}t|%h|%U%q|%>s|%O|%D|%{EDGE_DURATION}e|%{EDGE_START}e|%{EDGE_SENT}e|%{XGEOIP_COUNTRY_CODE2}e|%{Referer}i|%{User-agent}i" parsable
+
+* EDGE_DURATION: la duree total en millisecondes du contenu video servi.
+* EDGE_START: La position en millisecondes de demarrage dans le contenu video servi.
+* EDGE_SENT: La duree  en millisecondes reellement servie au client.
+* XGEOIP_COUNTRY_CODE2: pays d origine de la requete
+
+Les autres parametres de la directive LogFormat se trouve dans la documentation d'apache 2.
+
+La premiere etapes consistes a faire un script d'importation de ses logs dans mongodb, en faisant en sorte de convertir chaque donnee dans son type: ex une date en date mongo, un entier en int, etc.
+Remarque:
+* les duree EDGE_* doivent etre en secondes dans la Db
+* ignorer les entrees dont le user agent est: check_http/v1.4.13 (nagios-plugins 1.4.13)
+
+Le format du PATH d une requete est le suivant (ignorer les autres):
+ex: /4bc466f8f325e13acf000000/4c4f04dff325e158e100000e/mp4_h264_aac_hq-1285617562.mp4?start=0&auth=1286302148_f3d3a17038eab8c382ae86679c692edd
+ -> /user_id/media_id/asset_name-timestamp.extension?query_string
+
+Il faut parser ce path et stocker les champs suivant dans la db et non le path brut:
+- user_id
+- media_id
+- asset_name
+
+La deuxieme etape est de faire un petit site web permettant d afficher ses informations:
+- consommation par user_id en terme de volume (ko) servie et en terme de duree de video servie (seconds)
+- pourcentage des requetes par asset_name
+- pourcentage des requetes de video par pays
+- autre type de stats que tu trouverais pertinente
+
+
+*******************************************************************************
+files description:
+*******************************************************************************
+- my_config.py: global config file
+- update_db.py: update the mongodb logs collection with the apache2 log data converted to the right format (see below)
+- update_stats.py: process stats using the logs collection and update the mongod stats collection
+- stats: django app allowing the user to view the stats by type and date
+
+
+*******************************************************************************
+mongodb data format:
+*******************************************************************************
 KEY: FORMAT - DESCRIPTION
 date_time: datetime object - apache2 %t: Time the request was received (standard english format)
 url: str - apache2 %U + %q: The URL path requested, including query strings
@@ -14,7 +62,10 @@ media_id: str - dm: id of the served media
 asset_name: str - dm: asset name
 
 
+*******************************************************************************
 todo:
+*******************************************************************************
+- optimize the code
+- design for the django app
 
-- figure out the best way to format data inside the view before sending it to the template
 

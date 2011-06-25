@@ -10,7 +10,7 @@ import my_config
 
 
 def convert_data(d):
-    """Convert date_time string into datetime object, digit strings into integers, edge_* values into seconds"""
+    """Convert date_time string into a datetime object, digit strings into integers, edge_* values into seconds"""
     d['date_time'] = datetime.datetime.strptime(d['date_time'], '%Y-%m-%d %H:%M:%S')
     for k in d.keys():
         if k in ['bytes_sent', 'edge_duration', 'edge_start', 'edge_sent']:
@@ -24,10 +24,10 @@ def convert_data(d):
 
 
 def main():
-    #connect to the database and prepare the collection
+    #connect to the database and prepare the logs collection
     connection = pymongo.Connection(my_config.MONGODB_SERVER)
     db = connection.test
-    collection = pymongo.collection.Collection(db, my_config.MONGODB_COLLECTION)
+    collection = pymongo.collection.Collection(db, my_config.MONGODB_LOGS_COLLECTION)
     
     #browse the logs path, and read each file
     entries_added = 0
@@ -54,7 +54,10 @@ def main():
                     collection.insert(log_line)
                     entries_added += 1
         f.close()
-    
+
+        #TEMP
+        if entries_added >= 1000: break
+        
     print 'added %s entries to the database'%entries_added
 
 

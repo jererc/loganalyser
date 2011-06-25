@@ -3,42 +3,25 @@
 </head>
 <body>
 
-<table border="1">
-<tr>
-<td>Asset name</td><td>Request %</td>
-</tr>
-{% for asset_name, d in asset_names.items %}
-<tr>
-<td>{{ asset_name }}</td><td>{{ d }}</td>
-</tr>
+{% block form %}
+<form name="input" action="" method="post">
+{% csrf_token %}
+<select name="stats_type">
+<option value="users">Users</option>
+<option value="countries">Countries</option>
+<option value="asset_names">Asset names</option>
+</select>
+<select name="stats_time">
+{% for delta in time_delta %}
+<option value="{{ delta }}">Last {{ delta }} hours</option>
 {% endfor %}
-</table>
+</select>
+<input type="submit" value="Get stats" />
+</form>
+{% endblock %}
 
-<br>
-
-<table border="1">
-<tr>
-<td>Country</td><td>Request %</td>
-</tr>
-{% for country, d in countries.items %}
-<tr>
-<td>{{ country }}</td><td>{{ d }}</td>
-</tr>
-{% endfor %}
-</table>
-
-<br>
-
-<table border="1">
-<tr>
-<td>User ID</td><td>Total viewing time (seconds)</td><td>Total data sent (ko)</td>
-</tr>
-{% for user, d in users.items %}
-<tr>
-<td>{{ user }}</td><td>{{ d.0 }}</td><td>{{ d.1 }}</td>
-</tr>
-{% endfor %}
-</table>
+{% block content %}
+{% endblock %}
 
 </body>
 </html>
