@@ -2,11 +2,11 @@
 
 {% block content %}
 {% if stats %}
-<table border="1">
+<table>
 {% for r in stats %}
 <tr>
 {% for c in r %}
-<td>{{ c }}</td>
+<td style="padding-left: 10px; padding-right: 10px;">{{ c }}</td>
 {% endfor %}
 </tr>
 {% endfor %}
