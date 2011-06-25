@@ -64,5 +64,5 @@ def main():
     print 'added %s entries to the database'%entries_added
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     main()

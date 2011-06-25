@@ -72,5 +72,5 @@ def main():
             collection_stats.insert({'stats_type': t, 'stats_time': time_delta, 'stats': stats[t]})
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     main()
