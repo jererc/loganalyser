@@ -10,7 +10,7 @@ import my_config
 
 
 def convert_data(d):
-    """Convert date_time string into a datetime object, digit strings into integers, edge_* values into seconds."""
+    """Convert date_time strings into datetime objects, digit strings into integers, edge_* values into seconds."""
     d['date_time'] = datetime.datetime.strptime(d['date_time'], '%Y-%m-%d %H:%M:%S')
     for k in d.keys():
         if k in ['bytes_sent', 'edge_duration', 'edge_start', 'edge_sent']:
