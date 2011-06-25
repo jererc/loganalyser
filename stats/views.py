@@ -8,7 +8,7 @@ def home(request):
     time_delta = my_config.STATS_TIME_DELTA
     
     try:
-        #grab the post values from the request dict
+        #get the post values from the form
         stats_type = request.POST['stats_type']
         stats_time = request.POST['stats_time']
     except:
@@ -19,7 +19,7 @@ def home(request):
         db = connection.test
         collection = pymongo.collection.Collection(db, my_config.MONGODB_STATS_COLLECTION)
 
-        #get the database document according to the stats type and time of the request
+        #get the database document according to the stats type and time from the form
         document = collection.find_one({'stats_type': stats_type, 'stats_time': int(stats_time)})
         if document:
             stats = document['stats']
