@@ -4,13 +4,13 @@ import pymongo
 import my_config
 
 
-def get_stats_types(collection):
-    """Get all stats_types available in the mongodb collection"""
-    stats_types = {}
-    for d in collection.find({'stats_type': {'$exists': True}}):
-        if d['stats_type'] not in stats_types:
-            stats_types[d['stats_type']] = True
-    return sorted(stats_types.keys())
+def get_collection_keys(key, collection):
+    """Get all keys available in the mongodb collection"""
+    all_keys = {}
+    for d in collection.find({key: {'$exists': True}}):
+        if d[key] not in all_keys:
+            all_keys[d[key]] = True
+    return sorted(all_keys.keys())
 
 
 def home(request):
@@ -19,8 +19,8 @@ def home(request):
     db = connection.test
     collection = pymongo.collection.Collection(db, my_config.MONGODB_STATS_COLLECTION)
     
-    #get the form select values
-    stats_types = get_stats_types(collection)
+    #get the form select fields values
+    stats_types = get_collection_keys('stats_type', collection)
     time_delta = my_config.STATS_TIME_DELTA
     
     try:
