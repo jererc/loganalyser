@@ -14,14 +14,14 @@ def get_stats_types(collection):
 
 
 def home(request):
-    time_delta = my_config.STATS_TIME_DELTA
-    
     #connect to the database
     connection = pymongo.Connection(my_config.MONGODB_SERVER)
     db = connection.test
     collection = pymongo.collection.Collection(db, my_config.MONGODB_STATS_COLLECTION)
     
+    #get the form select values
     stats_types = get_stats_types(collection)
+    time_delta = my_config.STATS_TIME_DELTA
     
     try:
         #get the post values from the form
