@@ -50,11 +50,11 @@ mongodb data format (KEY: FORMAT - DESCRIPTION):
 *******************************************************************************
 date_time: datetime object - apache2 %t: Time the request was received (standard english format)
 url: str - apache2 %U + %q: The URL path requested, including query strings
-bytes_sent: int - apache2 %O: Bytes sent, including headers.
-edge_duration: int - apache2 %{...}e: durée totale en ms du contenu video servi, en secondes (environ variable).
-edge_start: int - apache2 %{...}e: position de démarrage dans le contenu video servi, en secondes (environ variable).
-edge_sent: int - apache2 %{...}e: durée réellement servie au client, en secondes (environ variable).
-country_code: str - apache2 %{...}e: pays d'origine de la requète (environ variable).
+bytes_sent: int - apache2 %O: Bytes sent, including headers, in kB.
+edge_duration: int - apache2 %{EDGE_DURATION}e: durée totale en ms du contenu video servi, en secondes (environ variable).
+edge_start: int - apache2 %{EDGE_START}e: position de démarrage dans le contenu video servi, en secondes (environ variable).
+edge_sent: int - apache2 %{EDGE_SENT}e: durée réellement servie au client, en secondes (environ variable).
+country_code: str - apache2 %{XGEOIP_COUNTRY_CODE2}e: pays d'origine de la requète (environ variable).
 user_agent: str - apache2 %{User-agent}i: The contents of User-agent: header line(s) in the request sent to the server.
 user_id: str - dm: id of the user
 media_id: str - dm: id of the served media

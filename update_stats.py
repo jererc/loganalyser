@@ -55,9 +55,9 @@ def main():
         
         #convert the stats dicts into lists so that the view has the minimum to process
         stats = {
-            'users': [['User ID', 'Total data sent (kB)', 'Total viewing time (seconds)']],
-            'countries': [['Country', 'Request %']],
-            'asset_names': [['Asset name', 'Request %']],
+            'users': [['User ID', 'Total viewing time (seconds)', 'Total data sent (kB)'],],
+            'countries': [['Country', 'Request %'],],
+            'asset_names': [['Asset name', 'Request %'],],
             }
         for user in users:
             stats['users'].append([user, users[user][0], users[user][1]])
