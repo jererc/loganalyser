@@ -8,8 +8,7 @@ def get_collection_keys(key, collection):
     """Get all keys available in the mongodb collection"""
     all_keys = {}
     for d in collection.find({key: {'$exists': True}}):
-        if d[key] not in all_keys:
-            all_keys[d[key]] = True
+        all_keys[d[key]] = True
     return sorted(all_keys.keys())
 
 
