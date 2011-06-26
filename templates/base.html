@@ -12,8 +12,8 @@
 {% endfor %}
 </select>
 <select name="stats_time">
-{% for d in time_delta %}
-<option value="{{ d }}">last {{ d }} hours</option>
+{% for t in stats_times %}
+<option value="{{ t }}">last {{ t }} hours</option>
 {% endfor %}
 </select>
 <input type="submit" value="Get stats" />

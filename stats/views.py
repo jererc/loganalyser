@@ -19,9 +19,9 @@ def home(request):
     db = connection.test
     collection = pymongo.collection.Collection(db, my_config.MONGODB_STATS_COLLECTION)
     
-    #get the form select fields values
+    #get the form's select fields values
     stats_types = get_collection_keys('stats_type', collection)
-    time_delta = my_config.STATS_TIME_DELTA
+    stats_times = get_collection_keys('stats_time', collection)
     
     try:
         #get the post values from the form
